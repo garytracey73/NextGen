@@ -1,0 +1,73 @@
+﻿@page
+@model ContactManager.Pages.Courses.IndexModel
+
+@{
+    ViewData["Title"] = "Courses";
+}
+<h2>Courses</h2>
+
+<table id="courses-table" class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Category
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Courses) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <div id="modal-placeholder"></div>
+                <button type="button" class="btn btn-primary" data-course-id=@item.Id data-toggle="ajax-modal" data-url="@Url.Page("Index", "AssignModalPartial", new { courseId = item.Id } )">
+                    Assign Users
+                </button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    
+    <script>
+        $(function () {
+
+            var placeholderElement = $('#modal-placeholder');
+            $("#courses-table").DataTable();
+
+            $('button[data-toggle="ajax-modal"]').click(function (event) {
+                var url = $(this).data('url');
+                $.get(url).done(function (data) {
+                    placeholderElement.html(data)
+                    placeholderElement.find('.modal').modal('show');
+                });
+            });
+
+            placeholderElement.on('click', '[data-save="modal"]', function (event) {
+                event.preventDefault();
+                var form = $(this).parents('.modal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = form.serialize();
+
+                $.post(actionUrl, dataToSend).done(function (data) {
+                    $('#add-course').modal('hide');
+                    return false;
+                });
+            });
+        });
+    </script>
+    
+    
+    }
+

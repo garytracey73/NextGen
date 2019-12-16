@@ -1,0 +1,50 @@
+﻿@model ContactManager.Models.AssignmentModel
+<!-- Modal -->
+<div class="modal fade" id="add-course" tabindex="-1" role="dialog" aria-labelledby="assignCourseLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignCourseLabel">Assign Course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-page-handler="AssignModalPartial">
+                    @Html.HiddenFor(x => x.CourseId)
+                    @Html.HiddenFor(x => x.CourseName)
+                    
+                    <table id="courses-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Usename
+                                </th>
+                                <th>Assign</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Users.Count; i++)
+                            {
+                            <tr>
+                                @Html.HiddenFor(x => x.Users[i].Username)
+                                @Html.HiddenFor(x => x.Users[i].UserId)
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Users[i].Username)
+                                </td>
+                                <td>
+                                    @Html.CheckBoxFor(modelItem => Model.Users[i].Assigned)
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-save="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
